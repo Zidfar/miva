@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'features/auth/screens/welcome_screen.dart';
+import 'features/auth/screens/welcome_screen.dart'; // Pastikan path ke WelcomeScreen benar
 
 void main() {
   runApp(const MyApp());
@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: WelcomeScreen(),
+      home: const WelcomeScreen(),
     );
   }
 }

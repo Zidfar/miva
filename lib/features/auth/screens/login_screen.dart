@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'register_screen.dart';
-import 'package:miva/features/home/screens/home_screen.dart';
+import 'package:miva/features/main_navigation.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -16,14 +16,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _onLogin() {
     if (_formKey.currentState!.validate()) {
-      // TODO: Proses login
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text('Login berhasil!')));
-      // Arahkan ke HomeScreen
+      // Arahkan ke MainNavigation
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const HomeScreen()),
+        MaterialPageRoute(builder: (_) => const MainNavigation()),
       );
     }
   }
