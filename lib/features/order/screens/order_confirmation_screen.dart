@@ -1,116 +1,81 @@
 import 'package:flutter/material.dart';
 
 class OrderConfirmationScreen extends StatelessWidget {
-  // Data pesanan, apotik, dan user bisa dioper dari cart atau lewat provider
-  // Untuk mockup, kita hardcode dulu
-  final List<Map<String, dynamic>> products;
+  final List<Map<String, dynamic>> cart;
   final Map<String, String> apotik;
-  final Map<String, String> user;
-
   const OrderConfirmationScreen({
     super.key,
-    required this.products,
+    required this.cart,
     required this.apotik,
-    required this.user,
   });
 
   @override
   Widget build(BuildContext context) {
-    int total = products.fold(0, (prev, p) => prev + (p['price'] as int));
+    int total = cart.fold(
+      0,
+      (sum, item) => sum + ((item['price'] * item['qty']) as int),
+    );
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Konfirmasi Pesanan"),
+        title: const Text('Konfirmasi Pesanan'),
         backgroundColor: const Color(0xFFA8D5BA),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(24),
-        children: [
-          const Text(
-            "Detail Pesanan",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 19),
-          ),
-          const SizedBox(height: 16),
-          ...products.map(
-            (p) => Card(
-              margin: const EdgeInsets.symmetric(vertical: 7),
-              child: ListTile(
-                leading: Image.asset(p['image'], width: 50, height: 50),
-                title: Text(p['name']),
-                subtitle: Text("Jumlah: ${p['qty']}"),
-                trailing: Text("Rp ${p['price']}"),
+      body: Padding(
+        padding: const EdgeInsets.all(18),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Apotik:",
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            Text(apotik['name'] ?? ''),
+            Text(apotik['address'] ?? ''),
+            const SizedBox(height: 14),
+            const Text("Pesanan:"),
+            ...cart.map(
+              (item) =>
+                  Text("${item['name']} x${item['qty']} (Rp ${item['price']})"),
+            ),
+            const Divider(height: 30),
+            Text(
+              "Total: Rp $total",
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            const Spacer(),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  // Simulasi: Tambahkan ke order history (nanti storage beneran)
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Pesanan berhasil dikonfirmasi!'),
+                    ),
+                  );
+                  // Navigasi ke Home/Profile/History, atau pop sampai ke Home
+                  Navigator.popUntil(context, (route) => route.isFirst);
+                  // Atau arahkan ke OrderHistoryScreen jika mau
+                  // Navigator.pushAndRemoveUntil(
+                  //   context,
+                  //   MaterialPageRoute(builder: (_) => OrderHistoryScreen()),
+                  //   (route) => false,
+                  // );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF7FA893),
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: const Text('Konfirmasi Pesanan'),
               ),
             ),
-          ),
-          const SizedBox(height: 20),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.local_pharmacy, color: Color(0xFF7FA893)),
-            title: Text(apotik['name'] ?? ''),
-            subtitle: Text("${apotik['address']}"),
-            trailing: Text(apotik['distance'] ?? ''),
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.person_outline, color: Color(0xFF7FA893)),
-            title: Text(user['name'] ?? ''),
-            subtitle: Text(user['email'] ?? ''),
-          ),
-          const SizedBox(height: 18),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                "Total",
-                style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
-              ),
-              Text(
-                "Rp $total",
-                style: const TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 28),
-          SizedBox(
-            width: double.infinity,
-            height: 46,
-            child: ElevatedButton.icon(
-              icon: const Icon(Icons.check),
-              label: const Text("Konfirmasi & Ambil di Apotik"),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF7FA893),
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder:
-                      (_) => AlertDialog(
-                        title: const Text("Pesanan Berhasil!"),
-                        content: const Text(
-                          "Silakan datang ke apotik pilihan Anda untuk mengambil obat.",
-                        ),
-                        actions: [
-                          TextButton(
-                            child: const Text("OK"),
-                            onPressed: () {
-                              Navigator.pop(context); // close dialog
-                              Navigator.pop(context); // back to home/order
-                            },
-                          ),
-                        ],
-                      ),
-                );
-              },
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

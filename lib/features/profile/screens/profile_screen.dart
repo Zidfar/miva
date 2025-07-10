@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../reminder/screens/reminder_screen.dart'; // jika sudah dibuat
 import '../../wishlist/screens/wishlist_screen.dart'; // jika sudah dibuat
 import '../../auth/screens/welcome_screen.dart'; // untuk logout
+import '../../order/screens/order_history_screen.dart'; // <--- Tambahkan ini
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -43,7 +44,19 @@ class ProfileScreen extends StatelessWidget {
             _profileField("Email", user['email']!),
             _profileField("Tanggal Lahir", user['dob']!),
             _profileField("Alamat", user['address']!),
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
+            ListTile(
+              leading: const Icon(Icons.history, color: Color(0xFF7FA893)),
+              title: const Text("Riwayat Pesanan"),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const OrderHistoryScreen()),
+                );
+              },
+            ),
+            const SizedBox(height: 8),
             const Divider(),
             ListTile(
               leading: const Icon(Icons.alarm, color: Color(0xFF7FA893)),

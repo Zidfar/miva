@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../order/screens/order_history_screen.dart'; // Tambahkan ini
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -24,6 +25,31 @@ class HomeScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         children: [
+          // Shortcut ke Riwayat Pesanan
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: ElevatedButton.icon(
+              icon: const Icon(Icons.history),
+              label: const Text("Riwayat Pesanan"),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF7FA893),
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 12,
+                  horizontal: 18,
+                ),
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const OrderHistoryScreen()),
+                );
+              },
+            ),
+          ),
           // Search bar + filter button
           Row(
             children: [

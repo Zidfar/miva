@@ -66,10 +66,7 @@ class ApotikScreen extends StatelessWidget {
               ),
               trailing: ElevatedButton(
                 onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Kamu memilih ${a['name']}")),
-                  );
-                  // TODO: Integrasi ke cart/order/checkout jika sudah siap
+                  Navigator.pop(context, a);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF7FA893),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:miva/features/apotik/screens/apotik_screen.dart';
+import 'package:miva/features/order/screens/order_confirmation_screen.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -148,13 +150,25 @@ class _CartScreenState extends State<CartScreen> {
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    // TODO: Arahkan ke proses pengambilan/checkout
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Fitur checkout coming soon"),
-                      ),
+                  onPressed: () async {
+                    // Navigasi ke ApotikScreen, dan dapatkan apotik yang dipilih
+                    final selectedApotik = await Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const ApotikScreen()),
                     );
+                    if (selectedApotik != null) {
+                      // Navigasi ke OrderConfirmationScreen, kirim data cart dan apotik
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (_) => OrderConfirmationScreen(
+                                cart: cart,
+                                apotik: selectedApotik,
+                              ),
+                        ),
+                      );
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF7FA893),
