@@ -1,15 +1,177 @@
 import 'package:flutter/material.dart';
 
-class CartScreen extends StatelessWidget {
+class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
 
   @override
+  State<CartScreen> createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
+  // Mock data produk cart
+  List<Map<String, dynamic>> cart = [
+    {
+      'image': 'assets/images/paracetamol.png',
+      'name': 'Paracetamol',
+      'price': 20000,
+      'qty': 1,
+    },
+    {
+      'image': 'assets/images/vitamin_c.png',
+      'name': 'Vitamin C',
+      'price': 18000,
+      'qty': 2,
+    },
+  ];
+
+  int get total =>
+      cart.fold(0, (sum, item) => sum + ((item['price'] * item['qty']) as int));
+
+  void updateQty(int index, int change) {
+    setState(() {
+      cart[index]['qty'] += change;
+      if (cart[index]['qty'] <= 0) cart.removeAt(index);
+    });
+  }
+
+  void removeItem(int index) {
+    setState(() {
+      cart.removeAt(index);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text(
-        'Cart Screen',
-        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-      ),
-    );
+    return cart.isEmpty
+        ? const Center(
+          child: Text("Cart masih kosong.", style: TextStyle(fontSize: 18)),
+        )
+        : Scaffold(
+          body: ListView.separated(
+            padding: const EdgeInsets.all(18),
+            itemCount: cart.length,
+            separatorBuilder: (_, __) => const SizedBox(height: 14),
+            itemBuilder: (context, i) {
+              final item = cart[i];
+              return Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(14),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 8,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      item['image'],
+                      width: 54,
+                      height: 54,
+                      fit: BoxFit.contain,
+                      errorBuilder:
+                          (_, __, ___) => Icon(
+                            Icons.medical_services,
+                            size: 38,
+                            color: Colors.grey[300],
+                          ),
+                    ),
+                    const SizedBox(width: 18),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            item['name'],
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          Text(
+                            "Rp ${item['price']}",
+                            style: const TextStyle(color: Color(0xFF7FA893)),
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.remove_circle_outline),
+                                onPressed: () => updateQty(i, -1),
+                              ),
+                              Text('${item['qty']}'),
+                              IconButton(
+                                icon: const Icon(Icons.add_circle_outline),
+                                onPressed: () => updateQty(i, 1),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.delete_outline),
+                      color: Colors.redAccent,
+                      onPressed: () => removeItem(i),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+          bottomNavigationBar: Container(
+            padding: const EdgeInsets.all(18),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 4,
+                  offset: Offset(0, -2),
+                ),
+              ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Total: Rp $total",
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    // TODO: Arahkan ke proses pengambilan/checkout
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Fitur checkout coming soon"),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF7FA893),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 28,
+                      vertical: 10,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: const Text("Proses"),
+                ),
+              ],
+            ),
+          ),
+        );
   }
 }
