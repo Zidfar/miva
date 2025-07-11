@@ -8,11 +8,14 @@ plugins {
 android {
     namespace = "com.example.miva"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    // Set NDK version required by plugins
+    ndkVersion = "27.0.12077973"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+        // Enable core library desugaring for Java 8+ APIs
+        isCoreLibraryDesugaringEnabled = true
     }
 
     kotlinOptions {
@@ -41,4 +44,9 @@ android {
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    // Add desugar_jdk_libs for Java 8+ API support
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }

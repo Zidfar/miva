@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../reminder/screens/reminder_screen.dart'; // jika sudah dibuat
 import '../../wishlist/screens/wishlist_screen.dart'; // jika sudah dibuat
 import '../../auth/screens/welcome_screen.dart'; // untuk logout
+import 'package:miva/core/services/auth_service.dart';
 import '../../order/screens/order_history_screen.dart'; // <--- Tambahkan ini
 
 class ProfileScreen extends StatelessWidget {
@@ -87,8 +88,8 @@ class ProfileScreen extends StatelessWidget {
             const SizedBox(height: 12),
             Center(
               child: ElevatedButton.icon(
-                onPressed: () {
-                  // Reset flag login (nanti jika sudah pakai storage/auth)
+                onPressed: () async {
+                  await AuthService.logout();
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(builder: (_) => const WelcomeScreen()),

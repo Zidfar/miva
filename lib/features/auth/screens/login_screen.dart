@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'register_screen.dart';
 import 'package:miva/features/main_navigation.dart';
+import 'package:miva/core/services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -14,8 +15,13 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _username = TextEditingController();
   final TextEditingController _password = TextEditingController();
 
-  void _onLogin() {
+  Future<void> _onLogin() async {
     if (_formKey.currentState!.validate()) {
+      // TODO: Validasi autentikasi user (hardcode/dummy/cek API)
+
+      // Simpan status login
+      await AuthService.setLogin(true);
+
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text('Login berhasil!')));
