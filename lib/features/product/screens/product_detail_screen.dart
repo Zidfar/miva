@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:miva/features/wishlist/controllers/wishlist_controller.dart';
 
-class ProductDetailScreen extends StatelessWidget {
+class ProductDetailScreen extends StatefulWidget {
   final String image;
   final String name;
   final String? description;
@@ -19,25 +20,53 @@ class ProductDetailScreen extends StatelessWidget {
   });
 
   @override
+  State<ProductDetailScreen> createState() => _ProductDetailScreenState();
+}
+
+class _ProductDetailScreenState extends State<ProductDetailScreen> {
+  @override
   Widget build(BuildContext context) {
+    final wish = WishlistController.instance;
+
     // Dummy data, gunakan parameter dari navigator
     final productDescription =
-        description ?? "Deskripsi produk akan tampil di sini.";
+        widget.description ?? "Deskripsi produk akan tampil di sini.";
     final productInstruction =
-        instruction ?? "Gunakan sesuai anjuran dokter/apoteker.";
-    final productDosage = dosage ?? "500 mg";
-    final productPrice = price ?? "Rp 20.000";
+        widget.instruction ?? "Gunakan sesuai anjuran dokter/apoteker.";
+    final productDosage = widget.dosage ?? "500 mg";
+    final productPrice = widget.price ?? "Rp 20.000";
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFFA8D5BA),
-        title: Text(name, style: const TextStyle(color: Colors.black87)),
+        title: Text(widget.name, style: const TextStyle(color: Colors.black87)),
         iconTheme: const IconThemeData(color: Colors.black87),
         elevation: 1,
         actions: [
           IconButton(
-            icon: const Icon(Icons.favorite_border),
-            onPressed: () {}, // TODO: Fitur wishlist
+            icon: Icon(
+              wish.isFavorite(widget.name)
+                  ? Icons.favorite
+                  : Icons.favorite_border,
+              color: Colors.redAccent,
+            ),
+            onPressed: () {
+              wish.toggleWishlist({
+                'image': widget.image,
+                'name': widget.name,
+                'price': widget.price,
+              });
+              setState(() {}); // update icon
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    wish.isFavorite(widget.name)
+                        ? 'Ditambahkan ke wishlist!'
+                        : 'Dihapus dari wishlist.',
+                  ),
+                ),
+              );
+            },
           ),
         ],
       ),
@@ -48,7 +77,7 @@ class ProductDetailScreen extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(16),
               child: Image.asset(
-                image,
+                widget.image,
                 width: 180,
                 height: 180,
                 fit: BoxFit.contain,
@@ -63,7 +92,7 @@ class ProductDetailScreen extends StatelessWidget {
           ),
           const SizedBox(height: 22),
           Text(
-            name,
+            widget.name,
             style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
